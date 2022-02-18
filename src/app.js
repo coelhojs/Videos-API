@@ -1,26 +1,24 @@
-const express = require("express");
 const bodyParser = require("body-parser");
+const express = require("express");
 
 const app = express();
-const router = express.Router();
+const port = 8080;
+const routes = require("./routes/index");
 
 require("./db");
-
-const port = 8080;
-const videos = require("./routes/videos");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use("/api", videos);
+app.use("/api", routes);
 
 const server = app.listen(port, () => {
   console.log(`Videos API listening on port ${port}`);
 });
 
 process.on("SIGTERM", () => {
-  debug("SIGTERM signal received for closing the videos API server");
+  console.debug("SIGTERM signal received for closing the videos API server");
   server.close(() => {
-    debug("API server closed");
+    console.debug("API server closed");
   });
 });

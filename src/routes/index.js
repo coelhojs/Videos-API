@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-router.use(function (req, res, next) {
-  console.log("request: /" + req.method);
-  next();
-});
+const videos = require("./videos");
+
+router.use("/videos", videos);
 
 router.get("/", function (req, res) {
   res.status(200).send("Hello tl;dv!");
@@ -12,7 +11,7 @@ router.get("/", function (req, res) {
 
 router.get("/health", (req, res) => {
   try {
-    return res.status(200).json({
+    return res.status(200).jsonp({
       message: "API ok!",
       timestamp: Date.now(),
       uptime: process.uptime(),

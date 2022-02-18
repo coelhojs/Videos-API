@@ -1,5 +1,3 @@
-const { body, validationResult } = require("express-validator");
-
 const Video = require("../models/videos");
 
 exports.create = function (req, res) {
@@ -45,7 +43,6 @@ exports.list = async (
   return {
     data: videos,
     meta: {
-      filter: filter,
       page: page,
       limit: limit,
       sort: sort,
@@ -61,18 +58,4 @@ exports.update = async (id, payload) => {
 
   Object.assign(video, payload);
   video.save();
-};
-
-exports.validatePayload = () => {
-  return [
-    body("name", "Video 'name' doesn't exist").exists(),
-    body("url", "Video 'url' is invalid").exists().isURL(),
-    body("thumbnailUrl", "Video 'thumbnailUrl' is invalid").exists().isURL(),
-    body("isPrivate", "The field 'isPrivate' is of type boolean")
-      .optional()
-      .isBoolean(),
-    body("timesViewed", "The field 'timesViewed' must be of type integer")
-      .optional()
-      .isInt(),
-  ];
 };

@@ -1,9 +1,12 @@
 const express = require("express");
-const { body, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
+
 const router = express.Router();
+
+const validator = require("../validator");
 const videoController = require("../controllers/videos");
 
-router.get("/videos", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const viewedMoreThan = parseInt(req.query.viewedMoreThan) || 0;
     const onlyPublic = req.query.public === "true";
@@ -25,13 +28,18 @@ router.get("/videos", async (req, res) => {
   }
 });
 
-router.post("/videos", function (req, res) {
+router.post("/", function (req, res) {
+  const errors = validationResult(req);
+  if (errors.isEmpty() == false) {
+    return res.status(422).jsonp(errors.array());
+  }
+
   videoController.create(req, res);
 });
 
 router.put(
-  "/videos/:id",
-  videoController.validatePayload(),
+  "/:id",
+  validator.validateVideoPayload(),
   async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -51,7 +59,7 @@ router.put(
   }
 );
 
-router.delete("/videos", function (req, res) {
+router.delete("/", function (req, res) {
   videoController.delete(req, res);
 });
 
