@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const sort = req.query.sort || "name";
 
-    const videosList = await videoController.list(onlyPublic, viewedMoreThan, page, limit, sort);
+    const videosList = await videoController.list(page, limit, sort, onlyPublic, viewedMoreThan);
 
     return res.status(200).json(videosList);
   } catch (error) {
@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", function (req, res) {
   const errors = validationResult(req);
-  if (errors.isEmpty() == false) {
+  if (!errors.isEmpty()) {
     return res.status(422).jsonp(errors.array());
   }
 
@@ -34,7 +34,7 @@ router.post("/", function (req, res) {
 router.put("/:id", validator.validateVideoPayload(), async (req, res) => {
   try {
     const errors = validationResult(req);
-    if (errors.isEmpty() == false) {
+    if (!errors.isEmpty()) {
       return res.status(422).jsonp(errors.array());
     }
 

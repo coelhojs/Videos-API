@@ -11,7 +11,7 @@ exports.create = function (req, res) {
   });
 };
 
-exports.list = async (onlyPublic = false, viewedMoreThan = 0, page, limit, sort) => {
+exports.list = async (page, limit, sort, onlyPublic = false, viewedMoreThan = 0) => {
   const skip = (page - 1) * limit;
 
   let filter = null;
