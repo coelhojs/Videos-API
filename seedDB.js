@@ -6,7 +6,9 @@ const MongoClient = require("mongodb").MongoClient;
 const videosCount = 1000;
 
 async function seedDB() {
-  const uri = `mongodb://${process.env.MONGO_HOSTNAME}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`;
+  const uri = process.env.CONNECTION_STRING;
+  const dbName = process.env.DB_NAME;
+  const collectionName = process.env.COLLECTION_NAME;
 
   const client = new MongoClient(uri, {
     useNewUrlParser: true,
@@ -16,7 +18,7 @@ async function seedDB() {
     await client.connect();
     console.log("Connected correctly to server");
 
-    const collection = client.db("database").collection("videos");
+    const collection = client.db(dbName).collection(collectionName);
 
     await collection.drop();
 

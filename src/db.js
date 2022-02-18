@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
-const { MONGO_HOSTNAME, MONGO_PORT, MONGO_DB } =
-  process.env;
+const { CONNECTION_STRING } = process.env;
 
 const options = {
   useNewUrlParser: true,
@@ -9,7 +8,7 @@ const options = {
 };
 
 mongoose
-  .connect(`mongodb://${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}`, options)
+  .connect(CONNECTION_STRING, options)
   .then(function () {
     console.log("MongoDB is connected");
   })
