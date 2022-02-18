@@ -1,67 +1,26 @@
 const express = require("express");
-const videosController = require("./controllers/videos");
+const bodyParser = require("body-parser");
 
 const app = express();
-const port = 8080;
+const router = express.Router();
 
 require("./db");
 
-app.use(express.urlencoded({ extended: true }));
+const port = 8080;
+const videos = require("./routes/videos");
 
-app.get("/", async (req, res) => {
-  try {
-    const viewedMoreThan = parseInt(req.query.viewedMoreThan) || 0;
-    const filter = JSON.parse(req.query.filter) || {};
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const sort = req.query.sort || "name";
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-    const videos = await videosController.list(
-      filter,
-      viewedMoreThan,
-      page,
-      limit,
-      sort
-    );
+app.use("/api", videos);
 
-    return res.status(200).json(videos);
-  } catch (error) {
-    return res.status(500).json({ error: error.message, stack: error.stack });
-  }
+const server = app.listen(port, () => {
+  console.log(`Videos API listening on port ${port}`);
 });
 
-app.post("/", function (req, res) {
-  videosController.create(req, res);
-});
-
-app.put("/", function (req, res) {
-  videosController.update(req, res);
-});
-
-app.delete("/", function (req, res) {
-  videosController.delete(req, res);
-});
-
-app.get("/health", async (req, res) => {
-  try {
-    const healthcheck = {
-      message: "API ok!",
-      timestamp: Date.now(),
-      uptime: process.uptime(),
-    };
-
-    return res.status(200).json(healthcheck);
-  } catch (error) {
-    return res
-      .status(500)
-      .json({
-        message: error.message,
-        stack: error.stack,
-        timestamp: Date.now(),
-      });
-  }
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+process.on("SIGTERM", () => {
+  debug("SIGTERM signal received for closing the videos API server");
+  server.close(() => {
+    debug("API server closed");
+  });
 });

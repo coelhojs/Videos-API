@@ -18,13 +18,12 @@ async function seedDB() {
 
     const collection = client.db("database").collection("videos");
 
-    //await collection.drop();
+    await collection.drop();
 
     let videos = [];
 
     for (let i = 0; i < videosCount; i++) {
       const video = {
-        _id: faker.datatype.uuid(),
         name: faker.lorem.sentence(),
         url: faker.internet.url(),
         thumbnailUrl: faker.image.imageUrl(),
