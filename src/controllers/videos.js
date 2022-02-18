@@ -2,7 +2,6 @@ const Video = require("../models/videos");
 
 exports.create = function (req, res) {
   var newVideo = new Video(req.body);
-  console.log(req.body);
   newVideo.save(function (err) {
     if (err) {
       res.status(400).send("Unable to save video to database");
@@ -12,23 +11,20 @@ exports.create = function (req, res) {
   });
 };
 
-exports.list = async (
-  onlyPublic = true,
-  viewedMoreThan = null,
-  page,
-  limit,
-  sort
-) => {
+exports.list = async (onlyPublic = false, viewedMoreThan = 0, page, limit, sort) => {
   const skip = (page - 1) * limit;
 
-  let filter = {};
+  let filter = null;
 
   if (onlyPublic) {
-    filter["isPrivate"] = true;
+    filter = {
+      isPrivate: true,
+    };
   }
 
   let query = null;
-  if (Object.keys(filter).length > 0) {
+
+  if (filter) {
     query = Video.find(filter);
   } else {
     query = Video.find();
@@ -51,11 +47,15 @@ exports.list = async (
 };
 
 exports.update = async (id, payload) => {
-  const video = await Video.findById(id);
+  const video = await Video.findById(id).exec();
   if (!video) {
     throw new Error("Video not found");
   }
 
   Object.assign(video, payload);
   video.save();
+};
+
+exports.delete = async (id) => {
+  await Video.deleteOne({ _id: id });
 };
