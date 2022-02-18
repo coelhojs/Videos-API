@@ -14,18 +14,10 @@ exports.create = function (req, res) {
 exports.list = async (page, limit, sort, onlyPublic = false, viewedMoreThan = 0) => {
   const skip = (page - 1) * limit;
 
-  let filter = null;
-
-  if (onlyPublic) {
-    filter = {
-      isPrivate: false,
-    };
-  }
-
   let query = null;
 
-  if (filter) {
-    query = Video.find(filter);
+  if (onlyPublic) {
+    query = Video.find({ isPrivate: false });
   } else {
     query = Video.find();
   }
