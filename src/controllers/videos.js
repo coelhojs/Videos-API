@@ -18,7 +18,7 @@ exports.list = async (page, limit, sort, onlyPublic = false, viewedMoreThan = 0)
 
   if (onlyPublic) {
     filter = {
-      isPrivate: true,
+      isPrivate: false,
     };
   }
 
