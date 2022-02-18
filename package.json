@@ -1,12 +1,13 @@
 {
   "name": "videos-api",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "This is a basic API for managing videos",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
+    "start": "node src/app.js",
     "seed": "node seedDB.js --trace-warnings",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
